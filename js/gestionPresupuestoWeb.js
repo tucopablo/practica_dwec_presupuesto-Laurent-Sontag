@@ -170,6 +170,40 @@ export function mostrarGastoWebCompat(gasto) {
     mostrarGastoWeb(capa.id, gasto);
 }
 
+async function enviarGastoApiEditar(form, id) {
+
+  const usuario = document.getElementById("nombre_usuario").value.trim();
+
+  const url = `https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest/${usuario}/${id}`;
+
+  const datos = {
+    descripcion: form.descripcion.value,
+    valor: parseFloat(form.valor.value),
+    fecha: form.fecha.value,
+    etiquetas: form.etiquetas.value.split(",")
+  };
+
+  try {
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar");
+    }
+
+    await cargarGastosApi();
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export function /*pintar*/mostrarGastoWeb(idElemento, gasto)
     {
         if (gasto === undefined) {
