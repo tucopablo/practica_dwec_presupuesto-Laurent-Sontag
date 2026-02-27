@@ -24,6 +24,15 @@ En primer lugar vamos a modificar el código de la capa <div id="controlesprinci
 
   <button id="guardar-gastos">Guardar gastos</button>
   <button id="cargar-gastos">Cargar gastos</button>
+<div>
+  <input type="text" id="nombre_usuario" placeholder="Nombre Usuario"><!--Practica Comunicación asíncrona-->
+  <button type="button" id="CargarGastoApi">Cargar gastos (API)</button>
+</div>
+<div>
+  <button class="gasto-borrar-api" type="button"> <!--j ajoute le bouton Borrar API paractia async-->
+  Borrar (API)
+</button>
+</div>
 
   </div>
       <h2>Totales</h2>
@@ -121,6 +130,10 @@ En primer lugar vamos a modificar el código de la capa <div id="controlesprinci
         </div>
         <button type="submit">Enviar</button>
         <button class="cancelar" type="button">Cancelar</button>
+
+        <div>
+          <button type="button" class="gasto-enviar-api">Enviar (API)</button>
+        </div><!--Practica Com asinc-->
     </form>
 </template>
   </body>
