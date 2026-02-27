@@ -70,13 +70,55 @@ export function mostrarDatoEnId(idElemento, valor)
         let element=document.getElementById(idElemento);
         element.textContent=valor;
     }
+async function enviarGastoApiNuevo(formulario)
+{
+  const usuario = document.getElementById("nombre_usuario").value.trim();
+  if (!usuario) {
+    alert("Introduce un nombre de usuario");
+    return;
+  }
 
+  const url = `https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest/${usuario}`;
+
+  const datos = {
+    descripcion: formulario.descripcion.value,
+    valor: parseFloat(formulario.valor.value),
+    fecha: formulario.fecha.value,
+    etiquetas: formulario.etiquetas.value
+      .split(",")
+      .map(e => e.trim())
+      .filter(e => e.length > 0)
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos)
+    });
+
+    if (!response.ok) throw new Error("Error al crear gasto");
+
+    await cargarGastosApi(); // recharge depuis l'API + repintar
+
+  } catch (error) {
+    console.error(error);
+    alert("Error al enviar a la API");
+  }
+}
 export function nuevoGastoWebFormulario(event)
     {
        let plantillaFormulario = document.getElementById("formulario-template").content.cloneNode(true);
 
        var formulario = plantillaFormulario.querySelector("form");
-    
+    //
+    let botonEnviarApi = plantillaFormulario.querySelector(".gasto-enviar-api");
+botonEnviarApi.addEventListener("click", async function () {
+  await enviarGastoApiNuevo(formulario);
+  // Optionnel : fermer le formulaire après envoi API
+  document.getElementById("anyadirgasto-formulario").disabled = false;
+  formulario.remove();
+});
     //handler del submit
     formulario.addEventListener("submit", function(event) {event.preventDefault();
 
