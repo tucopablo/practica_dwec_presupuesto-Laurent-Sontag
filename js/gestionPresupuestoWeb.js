@@ -507,6 +507,20 @@ EditarHandleFormulario.prototype.handleEvent = function(event) {
     formulario.fecha.value = this.gasto.fecha;
     formulario.etiquetas.value = this.gasto.etiquetas.join(",");
 
+     // ===== ENVIAR (API) PUT =====//PRACTICA ASYNC //gère l’envoi vers l’API (mise à jour), via PUT
+  let btnEnviarApi = formulario.querySelector(".gasto-enviar-api");//variable btnEnviarApi = dans formulario,il va me  chercher l’élément avec la classe .gasto-enviar-api
+  //-> récupère le bouton “Enviar (API)” dans CE formulaire-là.
+ //formulario.querySelector(...) évite de prendre un autre bouton identique ailleurs sur la page.
+  btnEnviarApi.addEventListener("click", async () => { //sur btnEnviarApi, ajouter un écouteur d’évènement click, avec une fonction asynchrone ->Quand je clique, je lance une fonction qui peut faire await (attendre l’API)
+   //fonction flèche asynchrone , Elle démarre au clic
+    await enviarGastoApiEditar(formulario, this.gasto.id);//attendre la fonction envoyerGastoApiEditar avec (formulario, id du gasto)”.=Tu envoies la modification du gasto à l’API, et tu attends que ça soit fini
+    // this.gasto.id //Ici on relie le bouton à l’objet gasto qui est en cours d’édition
+    
+    // cerrar formulario + reactivar botón
+    formulario.remove(); //“enlever formulario du DOM”.=ferme le formulaire (tu le supprimes de la page).
+    botonEditarFormulario.disabled = false;// permet de réactiver le bouton “Editar” que l on avait désactivé au début pour éviter double clic
+  });
+
     // Handler submit - objeto
     function SubmitEditarHandle() {}
     SubmitEditarHandle.prototype.handleEvent = function(event) {event.preventDefault();
