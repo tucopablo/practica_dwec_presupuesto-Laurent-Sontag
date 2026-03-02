@@ -638,9 +638,9 @@ if (!usuario) //si le usuario est vide("") nul ou autre: affiche une alerte
 }
 
 //Asociar evento cargar gasto
-document
+/*document
   .getElementById("actualizarpresupuesto")
-  .addEventListener("click", actualizarPresupuestoWeb);
+  .addEventListener("click", actualizarPresupuestoWeb);*///il est deja plus haut
 //il faut bien ajouter le listener Cargar gastos (API)
   document.getElementById("cargar-gastos-api")
   .addEventListener("click", cargarGastosApi);
