@@ -297,7 +297,13 @@ btnBorrarApi.type = "button";//Un <button> dans un <form> peut être submit par 
 //ça ne déclenche pas de comportement “submit” par erreur
 
 //mettre ici le dataset de la fonction delete API+ l event click
-btnBorrarApi.dataset.id = gasto.id;
+btnBorrarApi.dataset.id = gasto.gastoId;
+/*if (btnBorrarApi.dataset.gastoId === "undefined" || btnBorrarApi.dataset.gastoId === undefined) {
+  btnBorrarApi.disabled = true;
+  btnBorrarApi.textContent = "Borrar (API) (no-id)";
+}*/
+
+
 btnBorrarApi.addEventListener("click", borrarGastoApiHandler);
 divGasto.appendChild(btnBorrarApi);
 //divGasto = le <div class="gasto"> que tu es en train de construire pour ce gasto
@@ -513,7 +519,7 @@ EditarHandleFormulario.prototype.handleEvent = function(event) {
  //formulario.querySelector(...) évite de prendre un autre bouton identique ailleurs sur la page.
   btnEnviarApi.addEventListener("click", async () => { //sur btnEnviarApi, ajouter un écouteur d’évènement click, avec une fonction asynchrone ->Quand je clique, je lance une fonction qui peut faire await (attendre l’API)
    //fonction flèche asynchrone , Elle démarre au clic
-    await enviarGastoApiEditar(formulario, this.gasto.id);//attendre la fonction envoyerGastoApiEditar avec (formulario, id du gasto)”.=Tu envoies la modification du gasto à l’API, et tu attends que ça soit fini
+    await enviarGastoApiEditar(formulario, this.gasto.gastoId);//attendre la fonction envoyerGastoApiEditar avec (formulario, id du gasto)”.=Tu envoies la modification du gasto à l’API, et tu attends que ça soit fini
     // this.gasto.id //Ici on relie le bouton à l’objet gasto qui est en cours d’édition
     
     // cerrar formulario + reactivar botón
@@ -616,13 +622,16 @@ if (!usuario) //si le usuario est vide("") nul ou autre: affiche une alerte
             //    lis le corps de la réponse et  le convertis en objet JS.
             //response.json() est aussi asynchrone (ça lit/parse), donc await encore
             //gastosApi devient typiquement un tableau/objet contenant les gastos
-                
+                console.log("API gastos:", gastosApi);
             logica.cargarGastos(gastosApi);// actualizar lógica local
             //j appelles ma fonction locale cargarGastos (dans mon module logique).
             //Elle met à jour ma variable globale/structure locale gastos à partir de ce que l’API a renvoyé.
-      
+ 
                 // repintar mets à jour l’affichage : tu reconstruis le DOM / la liste / les totaux etc.
                 //(Donc : données → logique → interface)
+
+
+
             repintar();
     }
     catch (error)//Si n’importe quoi échoue dans le try (fetch, statut HTTP pas ok, JSON invalide, bug dans cargarGastos, etc.), tu arrives ici.
@@ -667,7 +676,7 @@ if (!usuario)//si PAS usuario → afficher message → arrêter fonction
   }
 
   const gastoId = this.dataset.id; //Je récupère l’id du gasto depuis le bouton cliqué.
-
+console.log("BORRAR API -> usuario:", usuario, " id:", gastoId);
   const url = `https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest/${usuario}/${gastoId}`;
 //this = bouton cliqué // dataset.id = data-id="123"
   try //“essayer ce bloc” -> On tente la requête, si erreur → catch.
