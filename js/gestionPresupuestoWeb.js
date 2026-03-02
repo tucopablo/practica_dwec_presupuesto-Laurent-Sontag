@@ -314,7 +314,10 @@ btnEditarForm.addEventListener("click", handlerEditForm);
 divGasto.appendChild(btnEditarForm);
 
     gastobyid.appendChild(divGasto);
-    }
+
+
+
+     }
 
 /*export function mostrarGastoWeb(a, b) {
     if (b === undefined) {
@@ -568,3 +571,109 @@ document.getElementById("guardar-gastos")
 document.getElementById("cargar-gastos")
     .addEventListener("click", cargarGastosWeb);
 
+//Practica fonctin async
+
+async function cargarGastosApi()//déclares une fonction asynchrone. fonction async retourne toujours une Promise (même si tu ne le vois pas).
+//Ça autorise l’usage de await dedans.
+{
+const usuario=document.getElementById("nombre_usuario").value.trim();//je écupères l’élément HTML qui a l’id nombre_usuario - je prends sa valeur: .value //.trim() enlève les espaces au début/à la fin (ex: " pepe " → "pepe").
+if (!usuario) //si le usuario est vide("") nul ou autre: affiche une alerte
+    {
+    alert("Introduce un nombre de usuario");
+    return;//stop la fomnction ici-donce je n appele pas la fonction si user n a rien mies.
+    }
+      const url = `https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest/${usuario}`;
+      //-> je construit l URL à appeler: Les backticks `...` = template string. //${usuario} injecte la valeur dans l’URL (ex: .../latest/laurent).
+
+    try//je démarres un bloc où tu vas tenter des opérations pouvant échouer (réseau, JSON invalide…).
+    {
+            const response = await fetch(url);//fetch(url) lance une requête HTTP (GET par défaut).
+            //Comme c’est lent (réseau), ça retourne une Promise.
+            //await dit : “attends que la Promise soit résolue” et récupère la réponse dans response.
+            //Grâce à await, ton code reste “linéaire” et lisible.
+
+            if (!response.ok) 
+            {
+            throw new Error("Error al cargar gastos");
+            }//response.ok vaut true si le code HTTP est entre 200 et 299.
+            //Si l’API répond 404/500/etc, = déclenches une erreur avec throw.
+            //throw fait sauter l’exécution direct vers le catch.
+            const gastosApi = await response.json();
+            //    lis le corps de la réponse et  le convertis en objet JS.
+            //response.json() est aussi asynchrone (ça lit/parse), donc await encore
+            //gastosApi devient typiquement un tableau/objet contenant les gastos
+                
+            logica.cargarGastos(gastosApi);// actualizar lógica local
+            //j appelles ma fonction locale cargarGastos (dans mon module logique).
+            //Elle met à jour ma variable globale/structure locale gastos à partir de ce que l’API a renvoyé.
+      
+                // repintar mets à jour l’affichage : tu reconstruis le DOM / la liste / les totaux etc.
+                //(Donc : données → logique → interface)
+            repintar();
+    }
+    catch (error)//Si n’importe quoi échoue dans le try (fetch, statut HTTP pas ok, JSON invalide, bug dans cargarGastos, etc.), tu arrives ici.
+
+
+
+    {
+    console.error(error);//console.error pour voir le détail dans la console.
+
+    alert("Error al conectar con la API");//alert pour prévenir l’utilisateur
+    }
+
+}
+
+//Asociar evento cargar gasto
+document
+  .getElementById("actualizarpresupuesto")
+  .addEventListener("click", actualizarPresupuestoWeb);
+//il faut bien ajouter le listener Cargar gastos (API)
+  document.getElementById("cargar-gastos-api")
+  .addEventListener("click", cargarGastosApi);
+
+  //Manejador .gasto-borrar-api
+//Objectif DELETE Puis reload liste
+async function borrarGastoApiHandler(event) {
+//fonction asynchrone borrarGastoApiHandler avec paramètre event
+//Je crée une fonction qui va gérer le clic (ou événement) pour supprimer un gasto
+//et elle est asynchrone (elle peut attendre Internet).
+//async = autorise await
+//event = info sur le clic (mais ici pas utilisé)
+  const usuario = document.getElementById("nombre_usuario").value.trim();
+//constante usuario = document → chercher élément → id nombre_usuario → prendre valeur → nettoyer espaces”
+//-> Je récupère ce que l’utilisateur a écrit dans l’input
+//document.getElementById = chercher dans le HTML
+// .value = valeur du champ
+// .trim() = enlève espaces inutiles
+
+if (!usuario)//si PAS usuario → afficher message → arrêter fonction
+    {
+    alert("Introduce un nombre de usuario");//!usuario = vide / null / undefined
+    return;//return = STOP
+  }
+
+  const gastoId = this.dataset.id; //Je récupère l’id du gasto depuis le bouton cliqué.
+
+  const url = `https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest/${usuario}/${gastoId}`;
+//this = bouton cliqué // dataset.id = data-id="123"
+  try //“essayer ce bloc” -> On tente la requête, si erreur → catch.
+  {
+    const response = await fetch(url, {
+      method: "DELETE"
+    });//“const response = attendre fetch url avec méthode DELETE”
+    //J’envoie une requête HTTP pour supprimer.
+    //await = attendre réponse serveur //fetch = appel API //DELETE = supprimer
+
+    if (!response.ok) {
+      throw new Error("Error al borrar");//“si réponse PAS ok → lancer erreur/Si le serveur dit non → erreur.
+    }//response.ok = succès (200) //throw = déclenche erreur → va dans catch
+
+    await cargarGastosApi();//attendre charger gastos API” //On recharge la liste après suppression.
+                            //DELETE → REFRESH
+
+  } catch (error) //si erreur → capturer erreur
+  {
+    console.error(error);//afficher erreur console + alerte utilisateur
+    alert("Error al borrar en API");
+  }
+}// mettre boton.dataset.id = gasto.id; dans mostrargastoweb juste apres la creacion du bouton
