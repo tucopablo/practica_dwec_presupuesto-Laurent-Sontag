@@ -283,6 +283,26 @@ let handlerBorrar = new BorrarHandle(gasto);
 btnBorrar.addEventListener("click", handlerBorrar);
 
 divGasto.appendChild(btnBorrar);
+//Añadir boton Borrar API
+let btnBorrarApi = document.createElement("button");
+//je stocke ce bouton dans une variable pour pouvoir le configurer
+//document = la page HTML (le DOM)
+//createElement("button") = crée un nouvel élément HTML <button>
+//-> Après cette ligne, j ai en mémoire un bouton, mais il n’est pas encore visible sur la page.
+btnBorrarApi.textContent = "Borrar (API)";//textContent = le texte affiché à l’intérieur du bouton
+// cest comme si je creai <button>Borrar (API)</button>
+btnBorrarApi.className = "gasto-borrar-api";//className = la classe CSS du bouton /ça met class="gasto-borrar-api"
+btnBorrarApi.type = "button";//Un <button> dans un <form> peut être submit par défaut.
+//type="button" garantit que :cliquer dessus n’envoie pas un formulaire
+//ça ne déclenche pas de comportement “submit” par erreur
+
+//mettre ici le dataset de la fonction delete API+ l event click
+btnBorrarApi.dataset.id = gasto.id;
+btnBorrarApi.addEventListener("click", borrarGastoApiHandler);
+divGasto.appendChild(btnBorrarApi);
+//divGasto = le <div class="gasto"> que tu es en train de construire pour ce gasto
+//appendChild(...) = “ajoute cet élément à la fin”
+ //C’est cette ligne qui rend le bouton visible dans la page.
 
 let btnEditarForm=document.createElement("button");
 btnEditarForm.textContent="Editar Formulario";
