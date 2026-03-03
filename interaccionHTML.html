@@ -104,6 +104,11 @@ En primer lugar vamos a modificar el código de la capa <div id="controlesprinci
              El script se debe cargar con el atributo type="module" porque vamos a utilizar "import"
              https://es.javascript.info/modules-intro#que-es-un-modulo
         -->
+
+<!--Vamos a añadir 3 scripts adicionales para cargar librerías externas que nos permitan generar gráficas para mostrar los datos agrupados-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"></script>
       <script type="module" src="js/generarDatosEstaticos.js"></script>
 
       <!--En segundo lugar vamos a añadir el siguiente código HTML al final del <body> (justo antes del cierre de la etiqueta):-->
