@@ -499,6 +499,16 @@ export function repintar()//!! cuidadado si la pongo primera en el archivo= NO R
         mostrarGastoWeb("listado-gastos-completo", g)
     )
 
+    //PRACTICA LIBRERIA
+     const agrupDia = logica.agruparGastos("dia");
+  mostrarGastosAgrupadosWeb("agrupacion-dia", agrupDia, "dia");
+
+  const agrupMes = logica.agruparGastos("mes");
+  mostrarGastosAgrupadosWeb("agrupacion-mes", agrupMes, "mes");
+
+  const agrupAnyo = logica.agruparGastos("anyo");
+  mostrarGastosAgrupadosWeb("agrupacion-anyo", agrupAnyo, "anyo");
+
 }
 
 export function actualizarPresupuestoWeb()
